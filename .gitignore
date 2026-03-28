@@ -1,0 +1,14 @@
+# Reports are generated daily — keep only recent ones in repo
+# Uncomment the line below to exclude all reports from git:
+# reports/*.html
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
