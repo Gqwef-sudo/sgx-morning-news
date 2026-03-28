@@ -1,10 +1,10 @@
 # SGX Morning News Reporter
 
-Automated daily stock market news aggregator for SGX (Singapore Exchange) and personal portfolio holdings.
+Automated daily stock market news aggregator for SGX (Singapore Exchange) and personal portfolio holdings. Runs as a **remote** Claude Code scheduled task — executes on Anthropic's cloud servers so it works even when your device is off.
 
 ## Overview
 
-This project uses a Claude Code scheduled task to:
+This project uses a Claude Code **remote scheduled task** to:
 1. Search for the latest morning news relevant to SGX and monitored holdings
 2. Fetch live stock prices via Yahoo Finance
 3. Generate a beautifully styled, self-contained HTML report
@@ -30,30 +30,64 @@ Each generated report includes:
 - **Sector Analysis** — Banking, REITs, Consumer, Property outlook
 - **Key Events & Calendar** — Upcoming earnings, dividends, macro events
 
-## Schedule
+## Setup: Remote Scheduled Task
 
-- **Frequency:** Weekdays (Monday–Friday)
-- **Time:** 7:00 AM SGT
-- **Output:** `reports/report-YYYY-MM-DD.html`
+This task runs on Anthropic's cloud — your device does **not** need to be on.
 
-## Setup
+### Step 1: Open Claude Code
 
-This project runs as a Claude Code scheduled task. To set it up:
+Open Claude Code in any terminal or IDE.
 
-1. Ensure [Claude Code](https://claude.com/claude-code) is installed
-2. The scheduled task is registered at `~/.claude/scheduled-tasks/sgx-morning-news/SKILL.md`
-3. Required MCP integrations:
-   - **WebSearch** — for news aggregation
-   - **Yahoo Finance** — for live stock prices and analyst data
+### Step 2: Create the Remote Scheduled Task
 
-## Manual Trigger
+Use the `/schedule` skill or ask Claude directly:
 
-You can manually run the task from the Claude Code sidebar under "Scheduled" tasks, or ask Claude:
-> "Run the sgx-morning-news task"
+> Create a remote scheduled task called "sgx-morning-news" that runs weekdays at 7:00 AM SGT (Asia/Singapore). Use the prompt from the SKILL.md file in this repo.
+
+Alternatively, paste this command:
+
+```
+/schedule create sgx-morning-news --remote --cron "0 7 * * 1-5" --timezone "Asia/Singapore"
+```
+
+Then paste the full contents of [`SKILL.md`](./SKILL.md) as the task prompt.
+
+### Step 3: Approve Tool Permissions
+
+On the first run, you'll be asked to approve access to:
+- **WebSearch** — for news aggregation
+- **Yahoo Finance MCP** — for live stock prices and analyst data
+
+Approve these once; they'll be remembered for future runs.
+
+### Step 4: Verify
+
+Check the task is running:
+- Open Claude Code sidebar → "Scheduled" section
+- Confirm the task shows as **enabled** and **remote**
+- Click "Run now" to test
+
+## Task Prompt
+
+The full task instructions are in [`SKILL.md`](./SKILL.md). This file contains:
+- The list of holdings to monitor
+- Web search queries to run
+- Yahoo Finance data to fetch
+- Complete HTML report structure and styling specifications
+
+To modify the task behavior (e.g., add/remove holdings, change report format), edit `SKILL.md` and update the remote scheduled task prompt accordingly.
 
 ## Reports
 
-Generated reports are saved to the `reports/` directory. Each is a self-contained HTML file with inline styling — no external dependencies needed. Open in any browser.
+Generated reports are saved as self-contained HTML files with inline styling — no external dependencies. Open in any browser.
+
+**Note:** Since the task runs remotely, reports are delivered in the Claude Code session. You can configure the task to save reports locally or send them via email/notification depending on your setup.
+
+## Manual Trigger
+
+You can manually trigger the task at any time:
+- From the Claude Code sidebar → "Scheduled" → "Run now"
+- Or ask Claude: *"Run the sgx-morning-news task"*
 
 ## Disclaimer
 
